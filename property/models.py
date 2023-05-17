@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
@@ -50,3 +51,9 @@ class Flat(models.Model):
 
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
+
+
+class Compliant(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Кто жаловался', max_length=200)
+    flat = models.ForeignKey(Flat, on_delete=models.PROTECT, verbose_name='Квартира, на которую пожаловались')
+    text = models.CharField('Текст жалобы', max_length=500)    
