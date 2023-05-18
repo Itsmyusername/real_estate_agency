@@ -60,3 +60,10 @@ class Compliant(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Кто жаловался', max_length=200)
     flat = models.ForeignKey(Flat, on_delete=models.PROTECT, verbose_name='Квартира, на которую пожаловались')
     text = models.CharField('Текст жалобы', max_length=500)    
+
+
+class Owner(models.Model):
+    owner = models.CharField(max_length=20, verbose_name='ФИО владельца')
+    owners_phonenumber = models.CharField('Номер владельца', max_length=20)
+    owner_pure_phone = PhoneNumberField('Нормализованный номер владельца', blank=True, null=True, region='RU')
+    flat = models.ForeignKey(Flat, on_delete=models.PROTECT, verbose_name='Квартира в собственности', related_name='flats')
