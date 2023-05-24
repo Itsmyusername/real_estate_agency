@@ -63,7 +63,10 @@ class Compliant(models.Model):
 
 
 class Owner(models.Model):
-    owner = models.CharField(max_length=20, verbose_name='ФИО владельца')
+    owner = models.CharField(max_length=200, verbose_name='ФИО владельца')
     owners_phonenumber = models.CharField('Номер владельца', max_length=20)
     owner_pure_phone = PhoneNumberField('Нормализованный номер владельца', blank=True, null=True, region='RU')
     flat = models.ForeignKey(Flat, on_delete=models.PROTECT, verbose_name='Квартира в собственности', related_name='flats')
+
+    def __str__(self):
+        return self.owner
