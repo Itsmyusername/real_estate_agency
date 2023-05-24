@@ -3,6 +3,11 @@ from django.contrib import admin
 from .models import Flat, Compliant, Owner
 
 
+class OwnerInline(admin.TabularInline):
+    model = Owner
+    raw_id_fields = ['flat']
+
+
 class FlatAdmin(admin.ModelAdmin):
     search_fields = ('town', 'address', 'owner')
     readonly_fields = ['created_at']
@@ -10,6 +15,7 @@ class FlatAdmin(admin.ModelAdmin):
     list_editable = ['new_building']
     list_filter = ['new_building']
     raw_id_fields = ['like']
+    inlines = [OwnerInline]
 
 
 class CompliantAdmin(admin.ModelAdmin):
