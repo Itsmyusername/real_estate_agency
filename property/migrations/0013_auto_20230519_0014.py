@@ -10,6 +10,7 @@ def fill_class_owner_from_class_flat(apps, schema_editor):
             owner = Owner.objects.get_or_create(
                 owner=flat.owner,
                 owners_phonenumber=flat.owners_phonenumber,
+                owner_pure_phone=flat.owner_pure_phone,
                 flat=flat,
             )
 

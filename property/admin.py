@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Flat, Compliant, User, Owner
+from .models import Flat, Compliant, Owner
 
 
 class FlatAdmin(admin.ModelAdmin):
