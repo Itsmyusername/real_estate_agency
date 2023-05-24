@@ -22,5 +22,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(fill_class_owner_from_class_flat)
+        migrations.RunPython(fill_class_owner_from_class_flat, reverse_code=migrations.RunPython.noop)
     ]

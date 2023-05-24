@@ -7,10 +7,19 @@ import phonenumbers
 def normalize_phone_numbers(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
     for flat in Flat.objects.all():
-        if flat.owners_phonenumber:
+        if flat.owners_phonenumber and not flat.owner_pure_phone:
             phone_number = phonenumbers.parse(flat.owners_phonenumber, 'RU')
             normalized_number = phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
             flat.owner_pure_phone = normalized_number
+            flat.save()
+
+
+def reverse_normalize_phone_numbers(apps, schema_editor):
+    Flat = apps.get_model('property', 'Flat')
+    for flat in Flat.objects.all():
+        if flat.owners_phonenumber and hasattr(flat, 'owner_pure_phone_backup'):
+            flat.owner_pure_phone = flat.owner_pure_phone_backup
+            flat.owner_pure_phone_backup = None
             flat.save()
 
 
@@ -21,5 +30,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(normalize_phone_numbers)
+        migrations.RunPython(normalize_phone_numbers, reverse_code=reverse_normalize_phone_numbers)
     ]

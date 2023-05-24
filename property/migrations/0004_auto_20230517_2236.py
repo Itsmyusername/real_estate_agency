@@ -9,6 +9,12 @@ def set_new_building_value(apps, schema_editor):
     ModelName.objects.filter(construction_year__lt=2015).update(new_building=False)
 
 
+def set_old_building_value(apps, schema_editor):
+    ModelName = apps.get_model('property', 'Flat')
+    ModelName.objects.filter(construction_year__gte=2015).update(new_building=False)
+    ModelName.objects.filter(construction_year__lt=2015).update(new_building=True)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -16,5 +22,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(set_new_building_value),
+        migrations.RunPython(set_new_building_value, reverse_code=set_old_building_value),
     ]
