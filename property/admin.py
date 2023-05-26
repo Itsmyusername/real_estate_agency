@@ -5,7 +5,7 @@ from .models import Flat, Complaint, Owner
 
 class OwnerInline(admin.TabularInline):
     model = Owner
-    raw_id_fields = ['flat']
+    raw_id_fields = ['flats']
 
 
 class FlatAdmin(admin.ModelAdmin):
@@ -23,7 +23,7 @@ class ComplaintAdmin(admin.ModelAdmin):
 
 
 class OwnerAdmin(admin.ModelAdmin):
-    raw_id_fields = ['flat']
+    raw_id_fields = ['flats']
 
 
 admin.site.register(Flat, FlatAdmin)
