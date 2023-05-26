@@ -2,17 +2,22 @@
 
 from django.db import migrations
 
-
 def fill_class_owner_from_class_flat(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
     Owner = apps.get_model('property', 'Owner')
-    flat_values = Flat.objects.values('owner', 'owners_phonenumber', 'owner_pure_phone', 'flat')
-    owners = [Owner(**flat_value) for flat_value in flat_values]
+    flats_iter = Flat.objects.all().iterator()
+    owners = [
+        Owner(
+            owner=flat.owner,
+            owners_phonenumber=flat.owners_phonenumber,
+            owner_pure_phone=flat.owner_pure_phone,
+            flat=flat,
+        )
+        for flat in flats_iter
+    ]
     Owner.objects.bulk_create(owners)
 
-
 class Migration(migrations.Migration):
-
     dependencies = [
         ('property', '0012_owner'),
     ]
