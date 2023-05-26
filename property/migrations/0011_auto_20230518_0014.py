@@ -6,21 +6,19 @@ import phonenumbers
 
 def normalize_phone_numbers(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
-    for flat in Flat.objects.all():
-        if flat.owners_phonenumber and not flat.owner_pure_phone:
-            phone_number = phonenumbers.parse(flat.owners_phonenumber, 'RU')
-            normalized_number = phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
-            flat.owner_pure_phone = normalized_number
-            flat.save()
-
+    phone_numbers = Flat.objects.filter(owners_phonenumber__isnull=False)\
+                                 .exclude(owner_pure_phone__isnull=False)\
+                                 .values_list('owners_phonenumber', flat=True)
+    phone_numbers = [phonenumbers.format_number(phonenumbers.parse(number, 'RU'), phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+                     for number in phone_numbers]
+    flats = Flat.objects.filter(owners_phonenumber__isnull=False)\
+                         .exclude(owner_pure_phone__isnull=False)
+    flats.update(owner_pure_phone=normalized_numbers)
 
 def reverse_normalize_phone_numbers(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
-    for flat in Flat.objects.all():
-        if flat.owners_phonenumber and hasattr(flat, 'owner_pure_phone_backup'):
-            flat.owner_pure_phone = flat.owner_pure_phone_backup
-            flat.owner_pure_phone_backup = None
-            flat.save()
+    flats = Flat.objects.filter(owners_phonenumber__isnull=False, owner_pure_phone_backup__isnull=False)
+    flats.update(owner_pure_phone=F('owner_pure_phone_backup'), owner_pure_phone_backup=None)
 
 
 class Migration(migrations.Migration):
