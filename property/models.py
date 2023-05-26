@@ -50,7 +50,7 @@ class Flat(models.Model):
         null=True,
         blank=True,
         db_index=True)
-    like = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Кто лайкнул', null=True, blank=True, related_name='user_likes')
+    like = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Кто лайкнул', null=True, blank=True)
 
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
@@ -62,7 +62,7 @@ class Complaint(models.Model):
     text = models.CharField('Текст жалобы', max_length=500)
 
     def __str__(self):
-        return self.user.get_full_name()
+        return self.user
 
 
 class Owner(models.Model):
