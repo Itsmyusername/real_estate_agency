@@ -62,7 +62,7 @@ class Complaint(models.Model):
     text = models.CharField('Текст жалобы', max_length=500)
 
     def __str__(self):
-        return self.user
+        return self.user.get_full_name()
 
 
 class Owner(models.Model):
