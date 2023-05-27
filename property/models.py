@@ -50,7 +50,7 @@ class Flat(models.Model):
         null=True,
         blank=True,
         db_index=True)
-    like = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Кто лайкнул', null=True, blank=True)
+    like = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Кто лайкнул', null=True, blank=True, related_name='likes')
 
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
