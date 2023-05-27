@@ -6,14 +6,17 @@ import phonenumbers
 
 def normalize_phone_numbers(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
-    phone_numbers = Flat.objects.filter(owners_phonenumber__isnull=False)\
-                                 .exclude(owner_pure_phone__isnull=False)\
-                                 .values_list('owners_phonenumber', flat=True)
-    phone_numbers = [phonenumbers.format_number(phonenumbers.parse(number, 'RU'), phonenumbers.PhoneNumberFormat.INTERNATIONAL)
-                     for number in phone_numbers]
-    flats = Flat.objects.filter(owners_phonenumber__isnull=False)\
-                         .exclude(owner_pure_phone__isnull=False)
-    flats.update(owner_pure_phone=normalized_numbers)
+    flats = Flat.objects.filter(owners_phonenumber__isnull=False) \
+                        .exclude(owner_pure_phone__isnull=False)
+    for flat in flats:
+        try:
+            parsed_number = phonenumbers.parse(flat.owners_phonenumber, 'RU')
+            formatted_number = phonenumbers.format_number(parsed_number, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+            flat.owner_pure_phone = formatted_number
+            flat.save()
+        except phonenumbers.phonenumberutil.NumberParseException:
+            pass
+
 
 def reverse_normalize_phone_numbers(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
