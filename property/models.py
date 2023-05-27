@@ -57,8 +57,8 @@ class Flat(models.Model):
 
 
 class Complaint(models.Model):
-    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Кто жаловался', max_length=200, related_name='user_complaints')
-    flat = models.ForeignKey(Flat, on_delete=models.PROTECT, verbose_name='Квартира, на которую пожаловались', related_name='flat_complaints')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Кто жаловался', max_length=200, related_name='complaints')
+    flat = models.ForeignKey(Flat, on_delete=models.PROTECT, verbose_name='Квартира, на которую пожаловались', related_name='complaints')
     text = models.CharField('Текст жалобы', max_length=500)
 
     def __str__(self):
